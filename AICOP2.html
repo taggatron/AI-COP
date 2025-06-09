@@ -192,6 +192,13 @@
             from { box-shadow: 0 0 20px #6a67ce; }
             to { box-shadow: 0 0 30px #9a8cf0; }
         }
+
+        .sub-list {
+            font-size: 1em;
+            margin-left: 3em;
+            color: #b0e0ff;
+            list-style-type: circle;
+        }
     </style>
 </head>
 
@@ -225,13 +232,28 @@
         </div>
     </div>
 
+    <div id="slide-action-items" class="slide">
+        <div class="content-wrapper" style="justify-content: flex-start; align-items: center; padding-top: 5vh;">
+            <div class="activity-section" style="width: 70vw; max-width: 900px; min-width: 300px;">
+                <h2 class="animated-text" style="font-size:2.2em; margin-bottom: 1em;">Action Items Brought Forward</h2>
+                <ul style="font-size:1.3em; text-align:left; line-height:1.7;">
+                    <li><strong>AI Policy and Governance:</strong> Ryan to present on AI policy and governance in the next meeting. - POSTPONED</li>
+                    <li><strong>Experimentation with AI Tools:</strong> Members to use AI in their activities and share their experiences in the next meeting.</li>
+                    <li><strong>Summarise the current AI tool use share via platform X (modality Y):</strong> Evaluate the efficacy - all team members (Dan to reflect on best way of sharing information).</li>
+                    <li class="sub-list"><strong>‘Champions’ of each tool</strong></li>
+                    <li><strong>Tool use focus vs User use focus:</strong> All to reflect on best COP organisational structure.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div id="slide3" class="slide">
         <div class="content-wrapper activity-section">
-            <h2 class="animated-text">Interactive Activity: Quickfire AI Exploration (10 mins)</h2>
-            <p>Live demonstration of one versatile AI tool (e.g., ChatGPT for resource creation).</p>
-            <p>In pairs/small groups, discuss:</p>
-            <blockquote>“How could this tool support your teaching and learning, assessment or administration?”</blockquote>
-            <div class="timer" onclick="startTimer(this)">Click to Start Timer: 10:00</div>
+            <h2 class="animated-text">Experimentation with AI Tools: Quickfire AI Exploration (5 mins)</h2>
+            <p>In pairs: Live demonstration of one versatile AI tool (e.g., ChatGPT for resource creation).</p>
+            <p>Discuss:</p>
+            <blockquote>“How has this tool supported your teaching and learning, assessment or administration?”</blockquote>
+            <div class="timer" onclick="startTimer(this)">Click to Start Timer: 5:00</div>
         </div>
     </div>
 
@@ -279,7 +301,7 @@
         });
 
         function startTimer(element) {
-            let time = 600; // 10 minutes in seconds
+            let time = 300; // 10 minutes in seconds
             const timerInterval = setInterval(() => {
                 const minutes = Math.floor(time / 60);
                 const seconds = time % 60;
