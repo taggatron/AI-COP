@@ -199,6 +199,15 @@
             color: #b0e0ff;
             list-style-type: circle;
         }
+
+        .timer-svg-container {
+            animation: pulseTimer 2s infinite alternate;
+        }
+
+        @keyframes pulseTimer {
+            from { filter: drop-shadow(0 0 8px #00fff7); }
+            to { filter: drop-shadow(0 0 24px #00fff7); }
+        }
     </style>
 </head>
 
@@ -251,9 +260,20 @@
         <div class="content-wrapper activity-section">
             <h2 class="animated-text">Experimentation with AI Tools: Quickfire AI Exploration (5 mins)</h2>
             <p>In pairs: Live demonstration of one versatile AI tool (e.g., ChatGPT for resource creation).</p>
-            <p>Discuss:</p>
-            <blockquote>“How has this tool supported your teaching and learning, assessment or administration?”</blockquote>
-            <div class="timer" onclick="startTimer(this)">Click to Start Timer: 5:00</div>
+            <p>Discuss: “How has this tool supported your teaching and learning, assessment or administration?”</p>
+            <!-- Timer SVG and animated timer -->
+            <div style="display: flex; align-items: center; gap: 2em; justify-content: center; margin-top: 20px;">
+                <div class="timer-svg-container">
+                    <svg id="animated-timer-svg" width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="35" stroke="#00fff7" stroke-width="6" fill="none" opacity="0.2"/>
+                        <path id="timer-sector" fill="#00fff7" fill-opacity="0.18" d=""/>
+                        <circle id="timer-progress" cx="40" cy="40" r="35" stroke="#00fff7" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="219.911" stroke-dashoffset="0"/>
+                        <rect x="39" y="11" width="2" height="30" rx="2" fill="#00fff7"/>
+                        <circle cx="40" cy="40" r="4" fill="#00fff7"/>
+                    </svg>
+                </div>
+                <div class="timer" id="timer-text" onclick="startTimer(this)">Click to Start Timer: 5:00</div>
+            </div>
         </div>
     </div>
 
@@ -300,17 +320,55 @@
             if (e.key === 'ArrowLeft') prevSlide();
         });
 
+        function polarToCartesian(cx, cy, r, angle) {
+            const a = (angle - 90) * Math.PI / 180.0;
+            return {
+                x: cx + (r * Math.cos(a)),
+                y: cy + (r * Math.sin(a))
+            };
+        }
+        function describeSector(cx, cy, r, startAngle, endAngle) {
+            const start = polarToCartesian(cx, cy, r, endAngle);
+            const end = polarToCartesian(cx, cy, r, startAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+            return [
+                "M", cx, cy,
+                "L", start.x, start.y,
+                "A", r, r, 0, largeArcFlag, 0, end.x, end.y,
+                "Z"
+            ].join(" ");
+        }
         function startTimer(element) {
-            let time = 300; // 10 minutes in seconds
+            let time = 300; // 5 minutes in seconds
+            const timerText = document.getElementById('timer-text');
+            const svgCircle = document.getElementById('timer-progress');
+            const svgSector = document.getElementById('timer-sector');
+            const totalLength = 2 * Math.PI * 35; // Circumference
+            svgCircle.style.strokeDasharray = totalLength;
+            svgCircle.style.strokeDashoffset = 0;
+            let elapsed = 0;
+            timerText.onclick = null;
+            function updateSector(elapsed) {
+                const percent = elapsed / 300;
+                const endAngle = 360 * percent;
+                svgSector.setAttribute('d', describeSector(40, 40, 32, 0, endAngle));
+            }
+            updateSector(0);
             const timerInterval = setInterval(() => {
                 const minutes = Math.floor(time / 60);
                 const seconds = time % 60;
-                element.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
                 time--;
-
+                elapsed++;
+                // Animate SVG circle
+                svgCircle.style.strokeDashoffset = (elapsed / 300) * totalLength;
+                // Animate SVG sector fill
+                updateSector(elapsed);
                 if (time < 0) {
                     clearInterval(timerInterval);
-                    element.textContent = "Time's Up!";
+                    timerText.textContent = "Time's Up!";
+                    svgCircle.style.strokeDashoffset = totalLength;
+                    updateSector(300);
                 }
             }, 1000);
         }
