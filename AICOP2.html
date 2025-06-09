@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Community of Practice Presentation</title>
     <style>
+        html, body, * {
+            box-sizing: border-box;
+        }
         body, html {
             margin: 0;
             padding: 0;
@@ -17,6 +20,16 @@
             overflow: hidden;
         }
 
+        /* --- Responsive scaling improvements --- */
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            min-width: 100vw;
+            min-height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
+        }
         .slide {
             display: none;
             width: 100vw;
@@ -29,11 +42,9 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         .active {
             display: flex;
         }
-
         .content-wrapper {
             width: 100vw;
             height: 100vh;
@@ -45,44 +56,148 @@
             align-items: center;
             box-sizing: border-box;
             padding: 0 5vw;
+            overflow: auto;
         }
-
-        #slide1 {
-            background: #222;
+        .activity-section {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #6a67ce;
+            border-radius: 15px;
+            padding: 2.5vw 2vw;
+            box-shadow: 0 0 20px #6a67ce;
+            animation: pulseActivity 3s infinite alternate;
+            width: 90vw;
+            max-width: 100vw;
+            min-width: 0;
+            height: auto;
+            max-height: 90vh;
+            box-sizing: border-box;
+            overflow: auto;
         }
-
-        #slide2 {
-            background: linear-gradient(135deg, #1a1a1a, #333);
+        h1, h2, h3 {
+            margin: 0 0 2vh;
+            font-size: clamp(1.5em, 4vw, 3.5em);
         }
-
-        #slide2 .intro-section {
-            background: rgba(0, 255, 255, 0.1);
-            border: 2px solid cyan;
-            border-radius: 10px;
-            box-shadow: 0 0 20px cyan;
-            padding: 20px;
-            animation: pulseIntro 2s infinite alternate;
+        p, li, blockquote {
+            font-size: clamp(1em, 2.2vw, 2.2em);
+            line-height: 1.6;
+        }
+        .intro-text {
+            font-size: clamp(1.2em, 2.5vw, 2.5em);
+            color: cyan;
+            font-weight: bold;
+            text-shadow: 0 0 10px cyan;
+        }
+        .timer {
+            font-size: clamp(1.2em, 2.5vw, 2.5em);
+            color: #fff;
+            margin-top: 2vh;
+            cursor: pointer;
+        }
+        .animated-text {
+            font-size: clamp(1.5em, 5vw, 4em);
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff6f61, #de4c8a, #6a67ce);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientAnimation 3s infinite alternate;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50vw;
+            min-width: 200px;
+            max-width: 90vw;
+            box-sizing: border-box;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .sub-list {
+            font-size: clamp(0.8em, 1.2vw, 1.2em);
+            margin-left: 3em;
+            color: #b0e0ff;
+            list-style-type: circle;
+        }
+        .timer-svg-container {
+            animation: pulseTimer 2s infinite alternate;
+            width: 10vw;
+            min-width: 60px;
+            max-width: 120px;
+            height: 10vw;
+            min-height: 60px;
+            max-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #animated-timer-svg {
+            width: 100%;
+            height: 100%;
+        }
+        video, img {
+            max-width: 100%;
+            max-height: 30vh;
+            height: auto;
+            width: auto;
+            display: block;
+        }
+        #intro-video {
+            margin-top: 2vh;
+            opacity: 1;
+            transition: opacity 1.2s;
+            max-width: 100%;
+            max-height: 30vh;
+        }
+        #intro-video.fade-out {
+            opacity: 0;
+            transition: opacity 1.2s;
+        }
+        .nav {
+            position: fixed;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), filter 0.6s;
+            filter: blur(12px) brightness(0.7) grayscale(0.7);
+        }
+        .nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+            filter: blur(0) brightness(1) grayscale(0);
+            animation: navPopIn 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .nav button {
+            background: linear-gradient(90deg, #0ff, #6a67ce);
+            border: 2px solid #00fff7;
+            border-radius: 30px;
+            padding: 1.5vh 4vw;
+            color: #fff;
+            font-weight: bold;
+            font-size: clamp(1em, 2vw, 1.5em);
+            cursor: pointer;
+            margin: 0 1vw;
+            box-shadow: 0 0 20px #00fff7, 0 0 10px #6a67ce inset;
+            transition: background 0.3s, box-shadow 0.3s, border 0.3s, transform 0.2s;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px #00fff7, 0 0 2px #fff;
+        }
+        .nav button:hover {
+            background: linear-gradient(90deg, #6a67ce, #0ff);
+            border: 2px solid #6a67ce;
+            box-shadow: 0 0 30px #6a67ce, 0 0 20px #0ff inset;
+            transform: scale(1.07);
+        }
+        @keyframes navPopIn {
+            0% { transform: translateX(-50%) scale(0.7) rotate(-8deg); filter: blur(16px) brightness(0.5); }
+            60% { transform: translateX(-50%) scale(1.1) rotate(3deg); filter: blur(2px) brightness(1.2); }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); filter: blur(0) brightness(1); }
         }
 
         @keyframes pulseIntro {
             from { box-shadow: 0 0 20px cyan; }
             to { box-shadow: 0 0 40px cyan; }
-        }
-
-        #slide3 {
-            background: linear-gradient(135deg, #1a1a1a, #444);
-        }
-
-        #slide4 {
-            background: radial-gradient(circle, #0f0c29, #302b63, #24243e);
-            color: #e0e0e0;
-            animation: backgroundShift 10s infinite alternate;
-        }
-
-        #slide5 {
-            background: linear-gradient(135deg, #2c3e50, #4ca1af);
-            color: #fff;
-            animation: pulseSlide 5s infinite alternate;
         }
 
         @keyframes backgroundShift {
@@ -95,128 +210,14 @@
             to { background-color: #4ca1af; }
         }
 
-        h1, h2, h3 {
-            margin: 0 0 20px;
-            font-size: 2.5em;
-        }
-
-        p, li, blockquote {
-            font-size: 1.8em;
-            line-height: 1.6;
-        }
-
-        .nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .nav button {
-            background: linear-gradient(90deg, #0ff, #6a67ce);
-            border: 2px solid #00fff7;
-            border-radius: 30px;
-            padding: 15px 40px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.5em;
-            cursor: pointer;
-            margin: 0 10px;
-            box-shadow: 0 0 20px #00fff7, 0 0 10px #6a67ce inset;
-            transition: background 0.3s, box-shadow 0.3s, border 0.3s, transform 0.2s;
-            letter-spacing: 1px;
-            text-shadow: 0 0 8px #00fff7, 0 0 2px #fff;
-        }
-
-        .nav button:hover {
-            background: linear-gradient(90deg, #6a67ce, #0ff);
-            border: 2px solid #6a67ce;
-            box-shadow: 0 0 30px #6a67ce, 0 0 20px #0ff inset;
-            transform: scale(1.07);
-        }
-
-        .intro-text {
-            font-size: 2em;
-            color: cyan;
-            font-weight: bold;
-            text-shadow: 0 0 10px cyan;
-        }
-
-        .timer {
-            font-size: 2.5em;
-            color: #fff;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .animated-text {
-            font-size: 3em;
-            font-weight: bold;
-            background: linear-gradient(90deg, #ff6f61, #de4c8a, #6a67ce);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientAnimation 3s infinite alternate;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 50vw;
-            min-width: 300px;
-            max-width: 90vw;
-            box-sizing: border-box;
-            text-align: center;
-            margin: 0 auto;
-        }
-
-        @keyframes gradientAnimation {
-            from { background-position: 0% 50%; }
-            to { background-position: 100% 50%; }
-        }
-
-        .activity-section {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #6a67ce;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 20px #6a67ce;
-            animation: pulseActivity 3s infinite alternate;
-            width: 90vw;
-            max-width: 100vw;
-            min-width: 0;
-            height: auto;
-            max-height: 90vh;
-            box-sizing: border-box;
-        }
-
         @keyframes pulseActivity {
             from { box-shadow: 0 0 20px #6a67ce; }
             to { box-shadow: 0 0 30px #9a8cf0; }
         }
 
-        .sub-list {
-            font-size: 1em;
-            margin-left: 3em;
-            color: #b0e0ff;
-            list-style-type: circle;
-        }
-
-        .timer-svg-container {
-            animation: pulseTimer 2s infinite alternate;
-        }
-
         @keyframes pulseTimer {
             from { filter: drop-shadow(0 0 8px #00fff7); }
             to { filter: drop-shadow(0 0 24px #00fff7); }
-        }
-
-        #intro-video.fade-out {
-            opacity: 0;
-            transition: opacity 1.2s;
-        }
-        #intro-video {
-            margin-top: 40%;
-            opacity: 1;
-            transition: opacity 1.2s;
         }
     </style>
 </head>
@@ -429,6 +430,55 @@
                 if (introVideo) introVideo.pause();
             });
         }
+        // Navigation reveal on cursor near bottom
+        const nav = document.querySelector('.nav');
+        let navVisible = false;
+        let navTimeout;
+        let inActivationZone = false;
+        function showNav() {
+            if (!navVisible) {
+                nav.classList.add('visible');
+                navVisible = true;
+            }
+            clearTimeout(navTimeout);
+        }
+        function hideNavWithDelay() {
+            clearTimeout(navTimeout);
+            navTimeout = setTimeout(() => {
+                if (!nav.matches(':hover') && !inActivationZone) {
+                    nav.classList.remove('visible');
+                    navVisible = false;
+                }
+            }, 2000);
+        }
+        document.addEventListener('mousemove', (e) => {
+            const navRect = nav.getBoundingClientRect();
+            // Activation zone: bottom 120px
+            const inZone = e.clientY > window.innerHeight - 120;
+            // Over nav bar
+            const overNav = (e.clientX >= navRect.left && e.clientX <= navRect.right && e.clientY >= navRect.top && e.clientY <= navRect.bottom);
+            if (inZone) {
+                if (!inActivationZone) {
+                    showNav();
+                }
+                inActivationZone = true;
+            } else {
+                inActivationZone = false;
+                if (!overNav) {
+                    hideNavWithDelay();
+                }
+            }
+        });
+        nav.addEventListener('mouseenter', () => {
+            clearTimeout(navTimeout);
+            nav.classList.add('visible');
+            navVisible = true;
+        });
+        nav.addEventListener('mouseleave', () => {
+            if (!inActivationZone) {
+                hideNavWithDelay();
+            }
+        });
     </script>
 </body>
 
