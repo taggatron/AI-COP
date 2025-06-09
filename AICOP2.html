@@ -208,6 +208,16 @@
             from { filter: drop-shadow(0 0 8px #00fff7); }
             to { filter: drop-shadow(0 0 24px #00fff7); }
         }
+
+        #intro-video.fade-out {
+            opacity: 0;
+            transition: opacity 1.2s;
+        }
+        #intro-video {
+            margin-top: 40%;
+            opacity: 1;
+            transition: opacity 1.2s;
+        }
     </style>
 </head>
 
@@ -217,8 +227,9 @@
             <div class="animated-text" style="flex: 2 1 0; min-width: 0;">
                 <h1>Welcome back to the AI Community of Practice</h1>
             </div>
-            <div style="flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center;">
-                <p class="intro-text">Advancing staff and student AI use in education.</p>
+            <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5em;">
+                <video id="intro-video" src="20250423_2312_Futuristic Skill Interaction_remix_01jsjbbnsre9zsf213vkvp6x4j.mp4" style="max-width: 100%; max-height: 30vh; border-radius: 18px; box-shadow: 0 0 32px #6a67ce, 0 0 8px #00fff7; background: #181c2f;" autoplay muted playsinline></video>
+                <p class="intro-text">Please take a seat and help yourself to refreshments</p>
             </div>
         </div>
     </div>
@@ -381,6 +392,30 @@
                     updateSector(300);
                 }
             }, 1000);
+        }
+
+        let videoLoopActive = true;
+        const introVideo = document.getElementById('intro-video');
+        if (introVideo) {
+            introVideo.addEventListener('ended', async function loopVideo() {
+                if (!videoLoopActive) return;
+                setTimeout(() => {
+                    introVideo.classList.add('fade-out');
+                    setTimeout(() => {
+                        introVideo.currentTime = 0;
+                        introVideo.classList.remove('fade-out');
+                        introVideo.play();
+                    }, 1200); // fade duration
+                }, 3000); // 3s pause after end
+            });
+        }
+        // Stop video loop on next slide
+        const nextBtn = document.querySelector('.nav button[onclick*="nextSlide"]');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                videoLoopActive = false;
+                if (introVideo) introVideo.pause();
+            });
         }
     </script>
 </body>
