@@ -313,14 +313,11 @@
 
     <div id="slide5" class="slide">
         <div class="content-wrapper activity-section">
-            <h2 class="animated-text">Shaping Our Community (5 mins)</h2>
-            <p>Present proposed subgroups:</p>
-            <ul>
-                <li>AI for Resource Creation</li>
-                <li>AI Use in the Classroom</li>
-                <li>AI Use in Assessment</li>
-            </ul>
-            <p>Quick poll or show of hands to identify subgroup interests.</p>
+            <h2 class="animated-text">Actions</h2>
+            <label for="actions-entry" style="font-size:1.2em; color:#b0e0ff; margin-bottom:0.5em; display:block;">Record meeting actions below:</label>
+            <textarea id="actions-entry" rows="8" style="width:90%; max-width:700px; min-width:200px; font-size:1.2em; border-radius:10px; border:2px solid #6a67ce; background:rgba(255,255,255,0.08); color:#fff; padding:1em; box-sizing:border-box; resize:vertical; margin-bottom:1em;"></textarea>
+            <div id="actions-saved-message" style="color:#00fff7; font-size:1em; display:none; margin-top:0.5em;">Actions saved!</div>
+            <button onclick="saveActions()" style="background:linear-gradient(90deg,#0ff,#6a67ce); border:2px solid #00fff7; border-radius:30px; padding:0.7em 2em; color:#fff; font-weight:bold; font-size:1.1em; cursor:pointer; margin-top:0.5em; box-shadow:0 0 10px #00fff7,0 0 4px #6a67ce inset; transition:background 0.3s,box-shadow 0.3s,border 0.3s,transform 0.2s;">Save Actions</button>
         </div>
     </div>
 
@@ -477,6 +474,19 @@
         nav.addEventListener('mouseleave', () => {
             if (!inActivationZone) {
                 hideNavWithDelay();
+            }
+        });
+        function saveActions() {
+            const actions = document.getElementById('actions-entry').value;
+            localStorage.setItem('meetingActions', actions);
+            const msg = document.getElementById('actions-saved-message');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 2000);
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            const actions = localStorage.getItem('meetingActions');
+            if (actions) {
+                document.getElementById('actions-entry').value = actions;
             }
         });
     </script>
